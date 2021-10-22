@@ -4,6 +4,7 @@ import { Statement } from "../entities/Statement";
 import { ICreateStatementDTO } from "../useCases/createStatement/ICreateStatementDTO";
 import { IGetBalanceDTO } from "../useCases/getBalance/IGetBalanceDTO";
 import { IGetStatementOperationDTO } from "../useCases/getStatementOperation/IGetStatementOperationDTO";
+import { ITransferStatementDTO } from "../useCases/transferStatement/ITransferStatementDTO";
 import { IStatementsRepository } from "./IStatementsRepository";
 
 export class StatementsRepository implements IStatementsRepository {
@@ -45,10 +46,11 @@ export class StatementsRepository implements IStatementsRepository {
     });
 
     const balance = statement.reduce((acc, operation) => {
+      const currentValue = `${operation.amount}`;
       if (operation.type === 'deposit') {
-        return acc + operation.amount;
+        return acc + parseFloat(currentValue);
       } else {
-        return acc - operation.amount;
+        return acc - parseFloat(currentValue);
       }
     }, 0)
 
@@ -60,5 +62,11 @@ export class StatementsRepository implements IStatementsRepository {
     }
 
     return { balance }
+  }
+
+  transfer({userTarget, userSource, amount}: ITransferStatementDTO): Promise<Statement> {
+
+
+
   }
 }
