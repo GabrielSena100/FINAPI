@@ -4,4 +4,5 @@ export interface ITransferStatementDTO {
   userTarget: User;
   userSource: User;
   amount: number;
+  description: string;
 }

@@ -9,6 +9,7 @@ interface IRequest {
   idUserTarget: string;
   idUserSource: string;
   amount: number;
+  description: string;
 }
 
 interface IResponse {
@@ -27,7 +28,8 @@ class TransferStatementUseCase {
     private usersRepository: IUsersRepository,
   ){}
 
-  async execute({idUserTarget, idUserSource, amount}: IRequest): Promise<Statement>{
+  async execute({idUserTarget, idUserSource, amount, description}: IRequest): Promise<Statement>{
+
     const userSource = await this.usersRepository.findById(idUserSource);
 
     if(!userSource){
@@ -48,10 +50,12 @@ class TransferStatementUseCase {
     if(balance < amount){
       throw new TransferStatementError.InsufficientFunds;
     }
+
     const data: ITransferStatementDTO = {
       userSource,
       userTarget,
-      amount
+      amount,
+      description
     }
 
     const transferStatement = await this.statementsRepository.transfer(data);
